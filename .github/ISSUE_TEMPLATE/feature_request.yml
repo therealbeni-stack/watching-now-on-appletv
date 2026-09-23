@@ -1,0 +1,22 @@
+name: "✨ Feature request"
+description: "Suggest an improvement for Watching Now on AppleTV"
+title: "[FEATURE] "
+labels: ["enhancement", "beta"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: "Apple TV model, tvOS/app/service or screenshots if relevant. Do not post credentials or secrets."

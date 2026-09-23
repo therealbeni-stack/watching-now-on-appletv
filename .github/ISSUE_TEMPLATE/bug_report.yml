@@ -1,0 +1,139 @@
+name: "🐞 Beta bug report"
+description: "Report a problem with Watching Now on AppleTV Public Beta"
+title: "[BUG] "
+labels: ["bug", "beta"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Watching Now on AppleTV. Please provide as much detail as possible. **Never paste Apple TV pairing credentials, passwords, tokens, cookies, or other secrets.**
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      placeholder: "e.g. 0.4.0 Beta"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      placeholder: "e.g. Windows 11 24H2, build ..."
+    validations:
+      required: true
+  - type: input
+    id: apple-model
+    attributes:
+      label: Apple TV model / generation
+      placeholder: "e.g. Apple TV 4K (3rd generation)"
+    validations:
+      required: true
+  - type: input
+    id: tvos
+    attributes:
+      label: tvOS version
+      placeholder: "e.g. tvOS 27.0"
+    validations:
+      required: true
+  - type: input
+    id: discord
+    attributes:
+      label: Discord Desktop version
+      placeholder: "Version/build if known"
+  - type: input
+    id: service
+    attributes:
+      label: Apple TV app / streaming service
+      placeholder: "e.g. CANAL+, Netflix, VLC, Plex..."
+    validations:
+      required: true
+  - type: input
+    id: content
+    attributes:
+      label: Content being played
+      description: "Title/episode/channel if relevant. Do not include private account information."
+      placeholder: "Movie / series / episode / channel"
+  - type: checkboxes
+    id: stages
+    attributes:
+      label: What worked?
+      options:
+        - label: Apple TV was discovered
+        - label: Pairing completed
+        - label: Discord connected
+        - label: Title appeared in Discord
+        - label: Artwork appeared
+        - label: Channel appeared
+        - label: Playback timer/state appeared
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: "What should have happened?"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: "What happened instead? Include how long the Discord status stayed visible if relevant."
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Exact steps to reproduce
+      placeholder: |
+        1. Start Discord...
+        2. Start Watching Now on AppleTV...
+        3. Open ... on Apple TV...
+        4. Play ...
+    validations:
+      required: true
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does it happen?
+      options:
+        - Every time
+        - Often
+        - Sometimes
+        - Once
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Advanced → Diagnostics output
+      description: "Paste the relevant log. REMOVE credentials, passwords, tokens, cookies and anything else private before posting."
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshots / video
+      description: "Drag files here if they help. Please remove personal/private information first."
+  - type: textarea
+    id: changes
+    attributes:
+      label: Troubleshooting already tried
+      description: "Did restarting the app, Discord, Apple TV, changing content/app, or re-pairing change anything?"
+  - type: textarea
+    id: network
+    attributes:
+      label: Network details (optional)
+      description: "Wi-Fi/Ethernet, VLAN/VPN/firewall or unusual network setup. Do NOT post public IP addresses, passwords or credentials."
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: "Any other detail that could help reproduce the problem."
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: "I reviewed my report and removed pairing credentials, passwords, tokens, cookies and other secrets."
+          required: true
