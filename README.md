@@ -2,10 +2,10 @@
 
 **Show what you're watching on Apple TV as Discord Rich Presence.**
 
-> 🧪 **Public Beta — v0.4.1-beta**  
+> 🧪 **Public Beta — v0.4.2-beta**  
 > The project is under active development. Metadata availability and behavior can vary between Apple TV apps and streaming services.
 
-[**⬇️ Download v0.4.1-beta for Windows**](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta) · [**🐞 Report a bug**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=bug_report.yml) · [**✨ Request a feature**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=feature_request.yml)
+[**⬇️ Download v0.4.2-beta for Windows**](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.2-beta) · [**🐞 Report a bug**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=bug_report.yml) · [**✨ Request a feature**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=feature_request.yml)
 
 **Watching Now on AppleTV** is a Windows application by **benesch.dev** that brings compatible Apple TV / tvOS Now Playing information to **Discord Rich Presence**.
 
@@ -29,11 +29,11 @@ When the active tvOS app exposes the necessary information, Discord can show the
 
 The recommended public-beta download is the GitHub Release:
 
-**[Download Watching Now on AppleTV v0.4.1-beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta)**
+**[Download Watching Now on AppleTV v0.4.2-beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.2-beta)**
 
 Installer:
 
-`Watching-Now-on-AppleTV-Setup-0.4.1.exe`
+`Watching-Now-on-AppleTV-Setup-0.4.2.exe`
 
 The installer is currently **unsigned**, so Windows SmartScreen may display a warning. End users do **not** need to install Python, Node.js or a development environment; the Windows package includes the helper runtime required by the application.
 
@@ -107,4 +107,4 @@ Bug reports and feature requests are welcome through **GitHub Issues**. Please k
 
 ---
 
-Developed by **benesch.dev** · Current public beta: **v0.4.1-beta**
+Developed by **benesch.dev** · Current public beta: **v0.4.2-beta**
