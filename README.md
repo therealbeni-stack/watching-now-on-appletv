@@ -18,7 +18,7 @@ The project is now open for public testing. Real-world reports from different Ap
 
 The recommended public-beta download is the latest GitHub Release:
 
-**[Download the latest Windows Beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/latest)**
+**[Download Watching Now on AppleTV v0.4.0 Beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.0-beta)**
 
 Release assets contain the Windows installer. GitHub Actions artifacts are intended mainly for development builds.
 
