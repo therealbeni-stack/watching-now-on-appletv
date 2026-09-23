@@ -1,44 +1,53 @@
-# Watching Now on AppleTV — Public Beta
+# Watching Now on AppleTV
 
-> **Beta software:** this project is under active development. Expect bugs, incomplete metadata and behavior that may vary between Apple TV apps and streaming services.
+**Show what you're watching on Apple TV as Discord Rich Presence.**
+
+> 🧪 **Public Beta — v0.4.1-beta**  
+> The project is under active development. Metadata availability and behavior can vary between Apple TV apps and streaming services.
+
+[**⬇️ Download v0.4.1-beta for Windows**](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta) · [**🐞 Report a bug**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=bug_report.yml) · [**✨ Request a feature**](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=feature_request.yml)
 
 **Watching Now on AppleTV** is a Windows application by **benesch.dev** that brings compatible Apple TV / tvOS Now Playing information to **Discord Rich Presence**.
 
-It can display the title you are watching and, when the available metadata allows it, movie/series information, season and episode details, artwork, channel information and playback state/timing.
+When the active tvOS app exposes the necessary information, Discord can show the title you are watching together with movie/series details, season and episode information, artwork, channel information and playback state/timing.
 
-## 🧪 Public beta
+## ✨ Features
 
-The project is now open for public testing. Real-world reports from different Apple TV models, tvOS versions, Windows systems, Discord versions and streaming apps are especially useful.
+- Automatic Apple TV discovery on the local network
+- Apple TV Companion pairing directly from the application
+- Discord Rich Presence integration
+- Movie, series, season and episode information when available
+- Artwork lookup and fallbacks
+- Channel information when available
+- Playback state/timer when reliable information is available
+- Automatic Discord reconnect
+- System tray support with minimize-to-tray and clean Exit behavior
+- Windows application, Desktop shortcut, Start menu and tray icon
+- Diagnostics for troubleshooting
 
-**Important:** metadata availability is controlled by the tvOS app/service. Some apps expose rich Now Playing information; others expose only part of it or none at all. This application cannot create metadata that tvOS does not provide.
+## ⬇️ Download & install
 
-## Download and install
+The recommended public-beta download is the GitHub Release:
 
-### Download
+**[Download Watching Now on AppleTV v0.4.1-beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta)**
 
-The recommended public-beta download is the latest GitHub Release:
-
-**[Download Watching Now on AppleTV v0.4.1 Beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta)**
-
-Release assets contain the Windows installer. GitHub Actions artifacts are intended mainly for development builds.
+Installer:
 
 `Watching-Now-on-AppleTV-Setup-0.4.1.exe`
 
-The installer is currently unsigned, so Windows SmartScreen may display a warning. Review the repository and release information before installing beta software.
+The installer is currently **unsigned**, so Windows SmartScreen may display a warning. End users do **not** need to install Python, Node.js or a development environment; the Windows package includes the helper runtime required by the application.
 
-End users do **not** need to install Python, Node.js or a development environment. The Windows package includes the helper runtime required by the application.
-
-## Requirements
+## 💻 Requirements
 
 - Windows 10/11
 - Apple TV and PC on the same local network
 - Discord Desktop installed and running
 - A compatible Apple TV/tvOS app exposing Now Playing information
 
-## First setup
+## 🚀 First setup
 
-1. Install and start Watching Now on AppleTV.
-2. Open **Apple TV** and choose **Find Apple TVs**.
+1. Install and start **Watching Now on AppleTV**.
+2. Open **Apple TV** in the application and choose **Find Apple TVs**.
 3. Select the Apple TV you want to use.
 4. Enter the pairing PIN displayed by Apple TV.
 5. Keep Discord Desktop running.
@@ -46,43 +55,38 @@ End users do **not** need to install Python, Node.js or a development environmen
 
 Pairing credentials are stored locally using Windows/Electron secure storage. Personal device addresses and credentials are not built into the application.
 
-## Features
+## 🧪 Public beta
 
-- Apple TV discovery and Companion pairing
-- Discord Rich Presence
-- automatic Discord reconnect
-- title/movie/series and episode parsing
-- channel detection when available
-- artwork lookup and fallbacks
-- playback state/timer when reliable information is available
-- system tray support with minimize-to-tray and clean Exit behavior
-- custom Windows application, Desktop shortcut, Start menu and tray icon
-- duplicate Apple TV discovery-result filtering after pairing
-- optional Start with Windows
-- diagnostics for troubleshooting
+Real-world reports from different Apple TV models, tvOS versions, Windows systems, Discord versions and streaming apps are especially useful.
 
-## 🐞 Beta bug reports — please include as much as possible
+**Important:** metadata availability is controlled by the tvOS app/service. Some apps expose rich Now Playing information; others expose only part of it or none at all. Watching Now on AppleTV cannot create metadata that tvOS does not provide.
 
-Use the **Bug report** issue form. Detailed reports are extremely valuable. Please include the application version, Windows version/build, Apple TV model/generation, tvOS version, Discord Desktop version, streaming/player app, what you were watching, expected behavior, actual behavior, exact reproduction steps, whether the issue happens every time, screenshots/video where useful, and the application's **Advanced → Diagnostics** output.
+## 🐞 Found a bug?
 
-Also mention whether Apple TV discovery and pairing worked, whether Discord connected, whether the title appeared, whether artwork/channel/timer appeared, how long the status remained visible, and whether changing app/content or restarting Apple TV/Discord/the application changed the result.
+Please use the **[Beta bug report](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=bug_report.yml)** form.
 
-**Never post pairing credentials, passwords, authentication tokens, cookies, private account data, or other secrets.** Before posting diagnostics, review them and remove anything you consider private. Local/private IP addresses and device identifiers can also be redacted if they are not necessary to reproduce the issue.
+Useful reports include the app version, Windows version/build, Apple TV model/generation, tvOS version, Discord Desktop version, streaming/player app, expected and actual behavior, reproduction steps, and the application's **Advanced → Diagnostics** output.
 
-## Privacy
+**Never post pairing credentials, passwords, authentication tokens, cookies, private account data, or other secrets.** Review diagnostics before posting them. Local/private IP addresses and device identifiers can also be redacted when they are not needed to reproduce the issue.
 
-The application needs local-network access to communicate with the selected Apple TV and internet access for Discord Rich Presence and supported metadata/artwork lookups. Beta diagnostics are not silently uploaded by the application. Information is shared with the project only when you intentionally submit it in a GitHub issue.
+For ideas and improvements, use the **[Feature request](https://github.com/therealbeni-stack/watching-now-on-appletv/issues/new?template=feature_request.yml)** form.
 
-## Known beta limitations
+## 🔒 Privacy
+
+The application needs local-network access to communicate with the selected Apple TV and internet access for Discord Rich Presence and supported metadata/artwork lookups.
+
+Beta diagnostics are **not silently uploaded** by the application. Information is shared with the project only when you intentionally submit it in a GitHub issue.
+
+## ⚠️ Known beta limitations
 
 - tvOS apps expose different amounts of Now Playing metadata.
-- artwork/channel detection can require external metadata matching and may occasionally be missing or incorrect.
-- some playback timing values exposed by services are not reliable.
-- the Windows installer is currently unsigned.
-- beta updates are currently manual.
-- multi-device support is still being refined.
+- Artwork/channel detection can require external metadata matching and may occasionally be missing or incorrect.
+- Some playback timing values exposed by services are not reliable.
+- The Windows installer is currently unsigned.
+- Beta updates are currently manual.
+- Multi-device support is still being refined.
 
-## Development
+## 🛠️ Development
 
 ```powershell
 npm.cmd install
@@ -97,10 +101,10 @@ npm.cmd start
 
 The release workflow builds a bundled `pyatv` helper before packaging the Windows installer.
 
-## Feedback
+## 💬 Feedback
 
-Please use GitHub Issues for bugs and reproducible technical problems. Feature requests are also welcome, but keep one problem/request per issue where possible.
+Bug reports and feature requests are welcome through **GitHub Issues**. Please keep one problem or request per issue where possible.
 
-Developer: **benesch.dev**
+---
 
-Version: **0.4.1 Beta**
+Developed by **benesch.dev** · Current public beta: **v0.4.1-beta**
