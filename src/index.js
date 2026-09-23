@@ -50,7 +50,7 @@ const channelCache = new Map();
 let guideSourcesCache = null;
 let guideSourcesFetchedAt = 0;
 
-function redactSensitive(value = "") {\n  return String(value || "")\n    .replace(/((?:Credentials?|companion-credentials)\\s*[:=]?\\s*)[^,\\r\\n\\s]+/gi, "$1[redacted]")\n    .replace(/(--companion-credentials\\s+)[^\\s]+/gi, "$1[redacted]");\n}\n\nfunction cleanTitle(title = "") {
+function redactSensitive(value = "") {\n  return String(value || "")\n    .replace(/((?:Credentials?|companion-credentials)\s*[:=]?\s*)[^,\r\n\s]+/gi, "$1[redacted]")\n    .replace(/(--companion-credentials\s+)[^\s]+/gi, "$1[redacted]");\n}\n\nfunction cleanTitle(title = "") {
   let value = String(title || "");
   try { value = decodeURIComponent(value); } catch {}
   value = value.replace(/^file:\/\/+/i, "");
@@ -826,7 +826,7 @@ function startAppleTvWatcher() {
     const message = data.toString().trim();
     if (!message) return;
     if (message.includes("DeprecationWarning: There is no current event loop")) return;
-    const safe = message.replace(/(Credentials:\s*)[^,\r\n]+/gi, "$1[redacted]");
+    const safe = redactSensitive(message);
     atvStderrLog = (atvStderrLog + safe + "\n").slice(-8000);
     console.log("pyatv:", safe);
   });
