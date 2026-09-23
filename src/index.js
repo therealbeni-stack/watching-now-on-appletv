@@ -5,7 +5,9 @@ const { spawn } = require("child_process");
 const { TextDecoder } = require("util");
 
 const clientId = process.env.DISCORD_CLIENT_ID;
-const host = process.env.APPLE_TV_VLC_HOST || "";
+const legacyHost = process.env.APPLE_TV_VLC_HOST || "";
+const appleHost = process.env.APPLE_TV_HOST || legacyHost;
+const vlcHost = process.env.VLC_HOST || legacyHost;
 const appleTvId = process.env.APPLE_TV_ID || "";
 const appleTvCredentials = process.env.APPLE_TV_CREDENTIALS || "";
 const reconnectMs = Number(process.env.RECONNECT_MS || 5000);
@@ -703,9 +705,9 @@ function handleVlcMessage(raw) {
 
 function connectVlc() {
   clearTimeout(reconnectTimer);
-  if (!host) { console.log("VLC host not configured; skipping VLC WebSocket."); return; }
-  console.log(`Connecting to VLC at ws://${host} ...`);
-  ws = new WebSocket(`ws://${host}`);
+  if (!vlcHost) { console.log("VLC host not configured; skipping VLC WebSocket."); return; }
+  console.log(`Connecting to VLC at ws://${vlcHost} ...`);
+  ws = new WebSocket(`ws://${vlcHost}`);
 
   ws.on("open", () => {
     console.log("Connected to Apple TV VLC");
@@ -797,7 +799,7 @@ function startAppleTvWatcher() {
   const bundledAtv = process.env.ATVREMOTE_EXE || "";
   const pythonExe = process.env.PYTHON_EXE || "python";
   const remoteArgs = [
-    ...(host ? ["--scan-hosts", host] : []),
+    ...(appleHost ? ["--scan-hosts", appleHost] : []),
     ...(appleTvId ? ["--id", appleTvId] : []),
     ...(appleTvCredentials ? ["--companion-credentials", appleTvCredentials] : []),
     "push_updates"
