@@ -32,5 +32,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           prerelease: true
-          generate_release_notes: true
+          name: Watching Now on AppleTV ${{ github.ref_name }}
+          body: |
+            ## Watching Now on AppleTV ${{ github.ref_name }}
+
+            Public beta for Windows.
+
+            ### Changes
+            - Fixed Electron desktop startup.
+            - Added system tray support and minimize-to-tray behavior.
+            - Added a custom application, tray, Start menu and Desktop shortcut icon.
+            - Fixed duplicate Apple TV entries after pairing.
+            - Stopped unnecessary VLC WebSocket reconnect attempts in normal Apple TV mode.
+
+            ### Requirements
+            - Windows 10/11
+            - Apple TV and PC on the same local network
+            - Discord Desktop running
+
+            This is beta software. Playback information depends on what the active tvOS app exposes through Now Playing.
+
+            Developed by **benesch.dev**
           files: dist/*.exe
