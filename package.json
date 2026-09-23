@@ -26,9 +26,11 @@
     "files": [
       "src/**/*",
       "desktop/**/*",
+      "build/icon.png",
       "package.json"
     ],
     "win": {
+      "icon": "build/icon.png",
       "executableName": "Watching Now on AppleTV",
       "target": [
         "nsis"
