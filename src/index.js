@@ -50,7 +50,13 @@ const channelCache = new Map();
 let guideSourcesCache = null;
 let guideSourcesFetchedAt = 0;
 
-function redactSensitive(value = "") {\n  return String(value || "")\n    .replace(/((?:Credentials?|companion-credentials)\s*[:=]?\s*)[^,\r\n\s]+/gi, "$1[redacted]")\n    .replace(/(--companion-credentials\s+)[^\s]+/gi, "$1[redacted]");\n}\n\nfunction cleanTitle(title = "") {
+function redactSensitive(value = "") {
+  return String(value || "")
+    .replace(/((?:Credentials?|companion-credentials)\s*[:=]?\s*)[^,\r\n\s]+/gi, "$1[redacted]")
+    .replace(/(--companion-credentials\s+)[^\s]+/gi, "$1[redacted]");
+}
+
+function cleanTitle(title = "") {
   let value = String(title || "");
   try { value = decodeURIComponent(value); } catch {}
   value = value.replace(/^file:\/\/+/i, "");
