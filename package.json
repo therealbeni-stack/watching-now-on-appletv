@@ -1,6 +1,6 @@
 {
   "name": "watching-now-on-appletv",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": true,
   "description": "Watching Now on AppleTV brings Apple TV playback to Discord Rich Presence.",
   "main": "desktop/main.js",
