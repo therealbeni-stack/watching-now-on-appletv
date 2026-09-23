@@ -39,11 +39,11 @@ jobs:
             Public beta for Windows.
 
             ### Changes
-            - Fixed Electron desktop startup.
-            - Added system tray support and minimize-to-tray behavior.
-            - Added a custom application, tray, Start menu and Desktop shortcut icon.
-            - Fixed duplicate Apple TV entries after pairing.
-            - Stopped unnecessary VLC WebSocket reconnect attempts in normal Apple TV mode.
+            - Hardened diagnostics so Apple TV pairing credentials are redacted before logs are displayed or retained.
+            - Redacted sensitive pairing output from desktop engine diagnostics and pairing error messages.
+            - Unified pyatv stdout/stderr credential redaction.
+            - Fixed the Apple TV watcher configuration guard to use the selected Apple TV host correctly.
+            - Includes the v0.4.1-beta desktop, tray, icon, pairing and Rich Presence improvements.
 
             ### Requirements
             - Windows 10/11
