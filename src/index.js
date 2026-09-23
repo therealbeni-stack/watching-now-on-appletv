@@ -50,7 +50,7 @@ const channelCache = new Map();
 let guideSourcesCache = null;
 let guideSourcesFetchedAt = 0;
 
-function cleanTitle(title = "") {
+function redactSensitive(value = "") {\n  return String(value || "")\n    .replace(/((?:Credentials?|companion-credentials)\\s*[:=]?\\s*)[^,\\r\\n\\s]+/gi, "$1[redacted]")\n    .replace(/(--companion-credentials\\s+)[^\\s]+/gi, "$1[redacted]");\n}\n\nfunction cleanTitle(title = "") {
   let value = String(title || "");
   try { value = decodeURIComponent(value); } catch {}
   value = value.replace(/^file:\/\/+/i, "");
@@ -790,7 +790,7 @@ function handleAtvOutput(chunk) {
 
 function startAppleTvWatcher() {
   if (atvProcess) return;
-  if (!appleTvId && !host) { console.log("Apple TV not configured. Open Settings and pair/select a device."); return; }
+  if (!appleTvId && !appleHost) { console.log("Apple TV not configured. Open Settings and pair/select a device."); return; }
   console.log("Starting Apple TV Now Playing watcher...");
 
   // Run pyatv through Python and force UTF-8 stdout/stderr on Windows.
@@ -817,7 +817,7 @@ function startAppleTvWatcher() {
   });
 
   atvProcess.stdout.on("data", data => {
-    atvStdoutLog = (atvStdoutLog + data.toString()).slice(-8000);
+    atvStdoutLog = (atvStdoutLog + redactSensitive(data.toString())).slice(-8000);
     handleAtvOutput(data);
   });
   // atvremote push_updates exits as soon as stdin reaches EOF. Keep stdin open.
