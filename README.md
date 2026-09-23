@@ -18,11 +18,11 @@ The project is now open for public testing. Real-world reports from different Ap
 
 The recommended public-beta download is the latest GitHub Release:
 
-**[Download Watching Now on AppleTV v0.4.0 Beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.0-beta)**
+**[Download Watching Now on AppleTV v0.4.1 Beta](https://github.com/therealbeni-stack/watching-now-on-appletv/releases/tag/v0.4.1-beta)**
 
 Release assets contain the Windows installer. GitHub Actions artifacts are intended mainly for development builds.
 
-`Watching-Now-on-AppleTV-Setup-0.4.0.exe`
+`Watching-Now-on-AppleTV-Setup-0.4.1.exe`
 
 The installer is currently unsigned, so Windows SmartScreen may display a warning. Review the repository and release information before installing beta software.
 
@@ -55,7 +55,9 @@ Pairing credentials are stored locally using Windows/Electron secure storage. Pe
 - channel detection when available
 - artwork lookup and fallbacks
 - playback state/timer when reliable information is available
-- system tray support
+- system tray support with minimize-to-tray and clean Exit behavior
+- custom Windows application, Desktop shortcut, Start menu and tray icon
+- duplicate Apple TV discovery-result filtering after pairing
 - optional Start with Windows
 - diagnostics for troubleshooting
 
@@ -101,4 +103,4 @@ Please use GitHub Issues for bugs and reproducible technical problems. Feature r
 
 Developer: **benesch.dev**
 
-Version: **0.4.0 Beta**
+Version: **0.4.1 Beta**
