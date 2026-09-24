@@ -893,10 +893,8 @@ function startAppleTvPolling() {
   console.log("Starting Apple TV active playing fallback (10s)...");
   pollAppleTvPlaying();
   atvPollTimer = setInterval(() => {
-    pollNetflixMrp();
     if (!atvWatcherHealthy) pollAppleTvPlaying();
   }, 10000);
-  pollNetflixMrp();
 }
 
 function startAppleTvWatcher() {
