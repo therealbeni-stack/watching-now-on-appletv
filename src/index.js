@@ -873,7 +873,7 @@ function pollAppleTvApp() {
       appleActiveApp=next;
       if(m) console.log("Apple TV active app: "+m[1].trim()+" ("+next+")");
     }
-    if(/com\.netflix\.Netflix/i.test(appleActiveApp) && netflixPlaying && !appleMedia){
+    if(/com\.netflix\.Netflix/i.test(appleActiveApp) && (netflixPlaying || (atvWatcherHealthy && !atvWatcherHasMedia)) && !appleMedia){
       appleMedia={mediaType:"Unknown",deviceState:"Playing",title:"Netflix",artist:"",position:null,app:"Netflix"};
       applePlaybackKey="netflix";
       if(!applePlaybackStartedAt)applePlaybackStartedAt=Date.now();
@@ -934,7 +934,7 @@ function startAppleTvPolling() {
   clearInterval(atvPollTimer);
   console.log("Starting Apple TV active playing fallback (10s)...");
   pollAppleTvApp();
-  pollAppleTvPlaying();
+  if (!atvWatcherHealthy) pollAppleTvPlaying();
   atvPollTimer = setInterval(() => {
     pollAppleTvApp();
     if (!atvWatcherHealthy) pollAppleTvPlaying();
