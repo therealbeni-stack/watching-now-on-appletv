@@ -14,3 +14,5 @@ refreshPairedAppleTVs();
 (()=>{const btn=document.querySelector("#probeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Probing Netflix Now Playing…";try{out.textContent=await window.appApi.probeNowPlaying()}catch(e){out.textContent="Now Playing probe failed: "+e.message}}})();
 
 (()=>{const btn=document.querySelector("#deepProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Inspecting Companion capabilities…";try{out.textContent=await window.appApi.deepProbeNowPlaying()}catch(e){out.textContent="Deep Companion probe failed: "+e.message}}})();
+
+(()=>{const btn=document.querySelector("#rawProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Requesting raw Companion Now Playing data…";try{out.textContent=await window.appApi.rawProbeNowPlaying()}catch(e){out.textContent="Raw Now Playing probe failed: "+e.message}}})();
