@@ -845,7 +845,6 @@ function startAppleTvWatcher() {
   if (atvProcess) return;
   if (!appleTvId && !appleHost) { console.log("Apple TV not configured. Open Settings and pair/select a device."); return; }
   console.log("Starting Apple TV Now Playing watcher...");
-  startAppleTvPolling();
 
   // Run pyatv through Python and force UTF-8 stdout/stderr on Windows.
   // This prevents Hungarian text such as "vígjáték", "évad" and "epizód"
@@ -912,6 +911,7 @@ function startServicesOnce() {
   servicesStarted = true;
   connectVlc();
   startAppleTvWatcher();
+  startAppleTvPolling();
 }
 function connectDiscord() {
   console.log("Connecting to Discord...");
