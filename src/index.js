@@ -40,6 +40,7 @@ let atvProcess;
 let atvPollTimer;
 let atvPollRunning = false;
 let atvWatcherHealthy = false;
+let atvWatcherHasMedia = false;
 let atvBuffer = "";
 let atvStdoutLog = "";
 let atvStderrLog = "";
@@ -767,6 +768,7 @@ function parseAtvBlock(block) {
   }
 
   if (title || artist) {
+    atvWatcherHasMedia = true;
     appleLastUpdateAt = Date.now();
     clearTimeout(appleStaleTimer);
     appleStaleTimer = setTimeout(() => {
@@ -857,6 +859,7 @@ function startAppleTvWatcher() {
   if (!appleTvId && !appleHost) { console.log("Apple TV not configured. Open Settings and pair/select a device."); return; }
   console.log("Starting Apple TV Now Playing watcher...");
   atvWatcherHealthy = true;
+  atvWatcherHasMedia = false;
 
   // Run pyatv through Python and force UTF-8 stdout/stderr on Windows.
   // This prevents Hungarian text such as "vígjáték", "évad" and "epizód"
@@ -902,6 +905,7 @@ function startAppleTvWatcher() {
 
   atvProcess.on("close", code => {
     atvWatcherHealthy = false;
+    atvWatcherHasMedia = false;
     if (code !== 0) {
       const combined = (atvStderrLog || atvStdoutLog || "").trim();
       if (combined) console.log("Apple TV watcher diagnostics:\n" + combined);
@@ -925,8 +929,8 @@ function startServicesOnce() {
   connectVlc();
   startAppleTvWatcher();
   setTimeout(() => {
-    if (!atvWatcherHealthy) startAppleTvPolling();
-  }, 3000);
+    if (!atvWatcherHasMedia) startAppleTvPolling();
+  }, 8000);
 }
 function connectDiscord() {
   console.log("Connecting to Discord...");
