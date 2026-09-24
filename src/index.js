@@ -11,6 +11,7 @@ const vlcHost = process.env.VLC_HOST || legacyHost;
 const appleTvId = process.env.APPLE_TV_ID || "";
 const appleTvCredentials = process.env.APPLE_TV_CREDENTIALS || "";
 const appleTvMrpCredentials = process.env.APPLE_TV_MRP_CREDENTIALS || "";
+const appleTvAirplayCredentials = process.env.APPLE_TV_AIRPLAY_CREDENTIALS || "";
 const reconnectMs = Number(process.env.RECONNECT_MS || 5000);
 const discordReconnect = process.env.DISCORD_AUTO_RECONNECT !== "0";
 const showArtwork = process.env.SHOW_ARTWORK !== "0";
@@ -802,15 +803,15 @@ function handleAtvOutput(chunk) {
 }
 
 function pollNetflixMrp() {
-  if (mrpPollRunning || !appleTvMrpCredentials || (!appleTvId && !appleHost)) return;
+  if (mrpPollRunning || (!appleTvMrpCredentials && !appleTvAirplayCredentials) || (!appleTvId && !appleHost)) return;
   mrpPollRunning = true;
   const bundledAtv = process.env.ATVREMOTE_EXE || "";
   const pythonExe = process.env.PYTHON_EXE || "python";
   const base = [
     ...(appleHost ? ["--scan-hosts", appleHost] : []),
     ...(appleTvId ? ["--id", appleTvId] : []),
-    "--protocol", "mrp",
-    "--mrp-credentials", appleTvMrpCredentials
+    ...(appleTvMrpCredentials ? ["--mrp-credentials", appleTvMrpCredentials] : []),
+    ...(appleTvAirplayCredentials ? ["--airplay-credentials", appleTvAirplayCredentials] : [])
   ];
   const run = command => new Promise(resolve => {
     const args = [...base, command];
