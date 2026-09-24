@@ -10,6 +10,7 @@ const appleHost = process.env.APPLE_TV_HOST || legacyHost;
 const vlcHost = process.env.VLC_HOST || legacyHost;
 const appleTvId = process.env.APPLE_TV_ID || "";
 const appleTvCredentials = process.env.APPLE_TV_CREDENTIALS || "";
+const appleTvMrpCredentials = process.env.APPLE_TV_MRP_CREDENTIALS || "";
 const reconnectMs = Number(process.env.RECONNECT_MS || 5000);
 const discordReconnect = process.env.DISCORD_AUTO_RECONNECT !== "0";
 const showArtwork = process.env.SHOW_ARTWORK !== "0";
@@ -39,6 +40,7 @@ let publishChain = Promise.resolve();
 let atvProcess;
 let atvPollTimer;
 let atvPollRunning = false;
+let mrpPollRunning = false;
 let atvWatcherHealthy = false;
 let atvWatcherHasMedia = false;
 let atvBuffer = "";
@@ -799,6 +801,46 @@ function handleAtvOutput(chunk) {
   }
 }
 
+function pollNetflixMrp() {
+  if (mrpPollRunning || !appleTvMrpCredentials || (!appleTvId && !appleHost)) return;
+  mrpPollRunning = true;
+  const bundledAtv = process.env.ATVREMOTE_EXE || "";
+  const pythonExe = process.env.PYTHON_EXE || "python";
+  const base = [
+    ...(appleHost ? ["--scan-hosts", appleHost] : []),
+    ...(appleTvId ? ["--id", appleTvId] : []),
+    "--protocol", "mrp",
+    "--mrp-credentials", appleTvMrpCredentials
+  ];
+  const run = command => new Promise(resolve => {
+    const args = [...base, command];
+    const p = spawn(bundledAtv || pythonExe, bundledAtv ? args : ["-X","utf8","-m","pyatv.scripts.atvremote",...args], {
+      windowsHide:true, stdio:["ignore","pipe","pipe"],
+      env:{...process.env,PYTHONUTF8:"1",PYTHONIOENCODING:"utf-8"}
+    });
+    let out="",err="";
+    p.stdout.on("data",d=>out+=d.toString());
+    p.stderr.on("data",d=>err+=d.toString());
+    p.on("error",()=>resolve({code:-1,out:"",err:""}));
+    p.on("close",code=>resolve({code,out,err}));
+  });
+  (async()=>{
+    try {
+      const appResult=await run("app");
+      const appText=redactSensitive(appResult.out).trim();
+      if (appResult.code===0 && appText) console.log("Apple TV active app (MRP):\n"+appText);
+      if (/netflix/i.test(appText)) {
+        const playing=await run("playing");
+        const safe=redactSensitive(playing.out).trim();
+        if (playing.code===0 && safe) {
+          console.log("Netflix MRP playing:\n"+safe);
+          parseAtvBlock(playing.out);
+        }
+      }
+    } finally { mrpPollRunning=false; }
+  })();
+}
+
 function pollAppleTvPlaying() {
   if (atvPollRunning || (!appleTvId && !appleHost)) return;
   atvPollRunning = true;
@@ -850,8 +892,10 @@ function startAppleTvPolling() {
   console.log("Starting Apple TV active playing fallback (10s)...");
   pollAppleTvPlaying();
   atvPollTimer = setInterval(() => {
+    pollNetflixMrp();
     if (!atvWatcherHealthy) pollAppleTvPlaying();
   }, 10000);
+  pollNetflixMrp();
 }
 
 function startAppleTvWatcher() {
