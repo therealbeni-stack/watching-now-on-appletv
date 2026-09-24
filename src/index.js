@@ -805,6 +805,7 @@ function pollAppleTvPlaying() {
     ...(appleHost ? ["--scan-hosts", appleHost] : []),
     ...(appleTvId ? ["--id", appleTvId] : []),
     ...(appleTvCredentials ? ["--companion-credentials", appleTvCredentials] : []),
+    "--protocol", "companion",
     "playing"
   ];
   const poll = spawn(bundledAtv || pythonExe, bundledAtv ? remoteArgs : [
@@ -824,12 +825,19 @@ function pollAppleTvPlaying() {
   poll.on("close", code => {
     atvPollRunning = false;
     const safeOut = redactSensitive(out).trim();
-    const safeErr = redactSensitive(err).trim();
+    const safeErr = redactSensitive(err)
+      .replace(/^.*DeprecationWarning: There is no current event loop.*\r?\n?/gmi, "")
+      .replace(/^\s*loop = asyncio\.get_event_loop\(\)\s*\r?\n?/gmi, "")
+      .trim();
     if (code === 0 && safeOut) {
       console.log("Apple TV playing poll:\n" + safeOut);
       parseAtvBlock(out);
     } else if (code !== 0 && safeErr) {
-      console.log("Apple TV playing poll diagnostics:\n" + safeErr);
+      if (/_touchStart failed|_sessionStart failed|ProtocolError/i.test(safeErr)) {
+        console.log("Apple TV playing poll: Companion session temporarily busy; retrying on the next interval.");
+      } else {
+        console.log("Apple TV playing poll diagnostics:\n" + safeErr);
+      }
     }
   });
 }
