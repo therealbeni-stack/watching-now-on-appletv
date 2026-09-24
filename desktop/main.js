@@ -17,3 +17,22 @@ ipcMain.handle("apple:mrp:pair:pin",async(_,pin)=>{if(!mrpPairing?.stdin?.writab
 ipcMain.handle("apple:list",()=>({devices:getDevices(),activeId:get().appleTvId||""}));ipcMain.handle("apple:select",(_,d)=>{const s=get();s.appleTvId=d.id||"";s.appleTvHost=d.host||"";s.appleTvName=d.name||"Apple TV";save(s);const all=getDevices(),i=all.findIndex(x=>x.id===d.id);if(i<0){all.push(d);saveDevices(all)}restartEngine();return true});ipcMain.handle("apple:forget",()=>{try{fs.unlinkSync(secretFile())}catch{}try{fs.unlinkSync(mrpSecretFile())}catch{}try{fs.unlinkSync(airplaySecretFile())}catch{}const s=get();const id=s.appleTvId;saveDevices(getDevices().filter(d=>d.id!==id));delete s.appleTvId;delete s.appleTvHost;delete s.appleTvName;s.setupComplete=false;save(s);restartEngine();return true});
 
 ipcMain.handle("apple:nowplaying:probe",async()=>{const s=get();const credential=loadCredential();if(!s.appleTvHost)throw new Error("Select an Apple TV first");if(!credential)throw new Error("Pair the Apple TV first");const script=path.join(__dirname,"..","runtime","companion_nowplaying_probe.py");if(app.isPackaged)throw new Error("Now Playing probe is currently available in developer mode only");return await new Promise((resolve,reject)=>{const p=spawn(process.env.PYTHON_EXE||"python",["-X","utf8",script,"--host",s.appleTvHost,...(s.appleTvId?["--id",s.appleTvId]:[]),"--credentials",credential],{windowsHide:true,stdio:["ignore","pipe","pipe"],env:{...process.env,PYTHONUTF8:"1",PYTHONIOENCODING:"utf-8"}});let out="",err="";p.stdout.on("data",d=>out+=d.toString());p.stderr.on("data",d=>err+=d.toString());p.on("error",reject);p.on("close",code=>{const safeOut=redact(out).trim(),safeErr=redact(err).trim();code===0?resolve(safeOut):reject(new Error(safeErr||safeOut||("Probe exited "+code)))})})});
+
+ipcMain.handle("apple:nowplaying:deep-probe",async()=>{const s=get();const credential=loadCredential();if(!s.appleTvHost)throw new Error("Select an Apple TV first");if(!credential)throw new Error("Pair the Apple TV first");if(app.isPackaged)throw new Error("Deep probe is currently available in developer mode only");const code=[
+"import asyncio,json,pyatv,sys",
+"async def m():",
+" loop=asyncio.get_running_loop()",
+" cs=await pyatv.scan(loop,hosts=[sys.argv[1]])",
+" c=cs[0]",
+" svc=c.get_service(pyatv.const.Protocol.Companion)",
+" svc.credentials=sys.argv[2]",
+" a=await pyatv.connect(c,loop)",
+" try:",
+"  objs={'atv':a,'metadata':a.metadata,'apps':a.apps}",
+"  out={}",
+"  for k,o in objs.items():",
+"   out[k]=sorted([n for n in dir(o) if not n.startswith('__') and any(x in n.lower() for x in ('play','media','app','event','dispatch','message','session','protocol','connection')) and not any(x in n.lower() for x in ('credential','password','secret'))])",
+"  print(json.dumps(out,indent=2))",
+" finally:a.close()",
+"asyncio.run(m())"
+].join("\n");return await new Promise((resolve,reject)=>{const p=spawn(process.env.PYTHON_EXE||"python",["-X","utf8","-c",code,s.appleTvHost,credential],{windowsHide:true,stdio:["ignore","pipe","pipe"],env:{...process.env,PYTHONUTF8:"1",PYTHONIOENCODING:"utf-8"}});let out="",err="";p.stdout.on("data",d=>out+=d);p.stderr.on("data",d=>err+=d);p.on("error",reject);p.on("close",code=>code===0?resolve(redact(out).trim()):reject(new Error(redact(err||out||("Probe exited "+code)).trim())))})});
