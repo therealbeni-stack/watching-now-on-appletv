@@ -44,6 +44,7 @@ let atvPollRunning = false;
 let mrpPollRunning = false;
 let appPollRunning = false;
 let appleActiveApp = "";
+let netflixPlaying = false;
 let atvWatcherHealthy = false;
 let atvWatcherHasMedia = false;
 let atvBuffer = "";
@@ -872,15 +873,12 @@ function pollAppleTvApp() {
       appleActiveApp=next;
       if(m) console.log("Apple TV active app: "+m[1].trim()+" ("+next+")");
     }
-    if(/com\.netflix\.Netflix/i.test(appleActiveApp) && !appleMedia){
-      // Netflix on current tvOS can expose playback state via Companion while
-      // withholding title/artist metadata. Keep this explicit rather than
-      // inventing a programme title.
+    if(/com\.netflix\.Netflix/i.test(appleActiveApp) && netflixPlaying && !appleMedia){
       appleMedia={mediaType:"Unknown",deviceState:"Playing",title:"Netflix",artist:"",position:null,app:"Netflix"};
       applePlaybackKey="netflix";
       if(!applePlaybackStartedAt)applePlaybackStartedAt=Date.now();
       queuePublish();
-    } else if(!/com\.netflix\.Netflix/i.test(appleActiveApp) && appleMedia?.app==="Netflix"){
+    } else if((!/com\.netflix\.Netflix/i.test(appleActiveApp) || !netflixPlaying) && appleMedia?.app==="Netflix"){
       appleMedia=null;applePlaybackKey="";applePlaybackStartedAt=0;queuePublish();
     }
   });
