@@ -592,7 +592,7 @@ async function publish() {
 
   let foundArtwork = null;
   let artworkSource = null;
-  if (showArtwork && pretty.artworkQuery) {
+  if (showArtwork && pretty.artworkQuery && appleMedia?.app !== "Netflix") {
     if (useApple) {
       foundArtwork = await findCanalPlusArtwork(appleMedia.title);
       if (foundArtwork) artworkSource = "CANAL+";
@@ -762,7 +762,7 @@ function parseAtvBlock(block) {
   const positionRaw = get("Position");
   const position = positionRaw ? Number(positionRaw.replace(/s$/i, "")) : NaN;
 
-  if (mediaType === "Unknown" || deviceState === "Idle" || deviceState === "Stopped") {
+  if ((mediaType === "Unknown" && !/com\.netflix\.Netflix/i.test(appleActiveApp)) || deviceState === "Idle" || deviceState === "Stopped") {
     appleMedia = null;
     appleLastUpdateAt = 0;
     clearTimeout(appleStaleTimer);
