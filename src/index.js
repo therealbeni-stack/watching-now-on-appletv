@@ -37,6 +37,8 @@ let lastSignature = "";
 let pendingSignature = "";
 let publishChain = Promise.resolve();
 let atvProcess;
+let atvPollTimer;
+let atvPollRunning = false;
 let atvBuffer = "";
 let atvStdoutLog = "";
 let atvStderrLog = "";
@@ -794,10 +796,56 @@ function handleAtvOutput(chunk) {
   }
 }
 
+function pollAppleTvPlaying() {
+  if (atvPollRunning || (!appleTvId && !appleHost)) return;
+  atvPollRunning = true;
+  const bundledAtv = process.env.ATVREMOTE_EXE || "";
+  const pythonExe = process.env.PYTHON_EXE || "python";
+  const remoteArgs = [
+    ...(appleHost ? ["--scan-hosts", appleHost] : []),
+    ...(appleTvId ? ["--id", appleTvId] : []),
+    ...(appleTvCredentials ? ["--companion-credentials", appleTvCredentials] : []),
+    "playing"
+  ];
+  const poll = spawn(bundledAtv || pythonExe, bundledAtv ? remoteArgs : [
+    "-X", "utf8", "-m", "pyatv.scripts.atvremote", ...remoteArgs
+  ], {
+    windowsHide: true,
+    stdio: ["ignore", "pipe", "pipe"],
+    env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8" }
+  });
+  let out = "", err = "";
+  poll.stdout.on("data", data => { out += data.toString(); });
+  poll.stderr.on("data", data => { err += data.toString(); });
+  poll.on("error", e => {
+    console.log("Apple TV playing poll failed:", e.message);
+    atvPollRunning = false;
+  });
+  poll.on("close", code => {
+    atvPollRunning = false;
+    const safeOut = redactSensitive(out).trim();
+    const safeErr = redactSensitive(err).trim();
+    if (code === 0 && safeOut) {
+      console.log("Apple TV playing poll:\n" + safeOut);
+      parseAtvBlock(out);
+    } else if (code !== 0 && safeErr) {
+      console.log("Apple TV playing poll diagnostics:\n" + safeErr);
+    }
+  });
+}
+
+function startAppleTvPolling() {
+  clearInterval(atvPollTimer);
+  console.log("Starting Apple TV active playing fallback (10s)...");
+  pollAppleTvPlaying();
+  atvPollTimer = setInterval(pollAppleTvPlaying, 10000);
+}
+
 function startAppleTvWatcher() {
   if (atvProcess) return;
   if (!appleTvId && !appleHost) { console.log("Apple TV not configured. Open Settings and pair/select a device."); return; }
   console.log("Starting Apple TV Now Playing watcher...");
+  startAppleTvPolling();
 
   // Run pyatv through Python and force UTF-8 stdout/stderr on Windows.
   // This prevents Hungarian text such as "vígjáték", "évad" and "epizód"
