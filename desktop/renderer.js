@@ -16,3 +16,5 @@ refreshPairedAppleTVs();
 (()=>{const btn=document.querySelector("#deepProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Inspecting Companion capabilities…";try{out.textContent=await window.appApi.deepProbeNowPlaying()}catch(e){out.textContent="Deep Companion probe failed: "+e.message}}})();
 
 (()=>{const btn=document.querySelector("#rawProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Requesting raw Companion Now Playing data…";try{out.textContent=await window.appApi.rawProbeNowPlaying()}catch(e){out.textContent="Raw Now Playing probe failed: "+e.message}}})();
+
+(()=>{const btn=document.querySelector("#monitorNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{btn.disabled=true;out.textContent="Monitoring Companion playback events for 18 seconds…";try{out.textContent=await window.appApi.monitorNowPlaying()}catch(e){out.textContent="Playback monitor failed: "+e.message}finally{btn.disabled=false}}})();
