@@ -7,14 +7,3 @@ document.querySelector("#sendPin").onclick=async()=>{const t=document.querySelec
 document.querySelector("#forgetDevice").onclick=async()=>{if(confirm("Forget the paired Apple TV on this PC?")){await window.appApi.forgetAppleTV();document.querySelector("#discoveryText").textContent="Device removed. You can pair another Apple TV.";document.querySelector("#appleTvId").value="";document.querySelector("#appleTvHost").value="";await refreshPairedAppleTVs()}};
 async function refreshPairedAppleTVs(){const box=document.querySelector("#pairedDevices");if(!box)return;const data=await window.appApi.listAppleTVs();box.innerHTML="";if(!data.devices.length){box.textContent="No paired Apple TVs yet.";return}data.devices.forEach(d=>{const b=document.createElement("button");const active=d.id===data.activeId;b.textContent=(active?"✓ ":"")+(d.name||"Apple TV")+(d.host?" — "+d.host:"");b.disabled=active;b.onclick=async()=>{await window.appApi.selectAppleTV(d);await refreshPairedAppleTVs();document.querySelector("#discoveryText").textContent="Active Apple TV: "+(d.name||"Apple TV")};box.appendChild(b)})}
 refreshPairedAppleTVs();
-
-
-(()=>{const btn=document.querySelector("#scanProtocols"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Checking…";try{out.textContent=await window.appApi.getAppleProtocols()}catch(e){out.textContent="Protocol scan failed: "+e.message}}})();
-
-(()=>{const btn=document.querySelector("#probeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Probing Netflix Now Playing…";try{out.textContent=await window.appApi.probeNowPlaying()}catch(e){out.textContent="Now Playing probe failed: "+e.message}}})();
-
-(()=>{const btn=document.querySelector("#deepProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Inspecting Companion capabilities…";try{out.textContent=await window.appApi.deepProbeNowPlaying()}catch(e){out.textContent="Deep Companion probe failed: "+e.message}}})();
-
-(()=>{const btn=document.querySelector("#rawProbeNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{out.textContent="Requesting raw Companion Now Playing data…";try{out.textContent=await window.appApi.rawProbeNowPlaying()}catch(e){out.textContent="Raw Now Playing probe failed: "+e.message}}})();
-
-(()=>{const btn=document.querySelector("#monitorNowPlaying"),out=document.querySelector("#protocolScan");if(!btn||!out)return;btn.onclick=async()=>{btn.disabled=true;out.textContent="Monitoring Companion playback events for 18 seconds…";try{out.textContent=await window.appApi.monitorNowPlaying()}catch(e){out.textContent="Playback monitor failed: "+e.message}finally{btn.disabled=false}}})();
