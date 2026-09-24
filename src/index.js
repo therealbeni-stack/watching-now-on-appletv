@@ -42,6 +42,8 @@ let atvProcess;
 let atvPollTimer;
 let atvPollRunning = false;
 let mrpPollRunning = false;
+let appPollRunning = false;
+let appleActiveApp = "";
 let atvWatcherHealthy = false;
 let atvWatcherHasMedia = false;
 let atvBuffer = "";
@@ -842,6 +844,48 @@ function pollNetflixMrp() {
   })();
 }
 
+function pollAppleTvApp() {
+  if (appPollRunning || (!appleTvId && !appleHost)) return;
+  appPollRunning = true;
+  const bundledAtv = process.env.ATVREMOTE_EXE || "";
+  const pythonExe = process.env.PYTHON_EXE || "python";
+  const remoteArgs = [
+    ...(appleHost ? ["--scan-hosts", appleHost] : []),
+    ...(appleTvId ? ["--id", appleTvId] : []),
+    ...(appleTvCredentials ? ["--companion-credentials", appleTvCredentials] : []),
+    "--protocol", "companion",
+    "app"
+  ];
+  const p = spawn(bundledAtv || pythonExe, bundledAtv ? remoteArgs : [
+    "-X","utf8","-m","pyatv.scripts.atvremote",...remoteArgs
+  ], {windowsHide:true,stdio:["ignore","pipe","pipe"],env:{...process.env,PYTHONUTF8:"1",PYTHONIOENCODING:"utf-8"}});
+  let out="";
+  p.stdout.on("data",d=>out+=d.toString());
+  p.on("error",()=>{appPollRunning=false});
+  p.on("close",code=>{
+    appPollRunning=false;
+    if(code!==0)return;
+    const safe=redactSensitive(out).trim();
+    const m=safe.match(/App:\s*(.*?)\s*\(([^)]+)\)/i);
+    const next=m ? m[2].trim() : "";
+    if(next!==appleActiveApp){
+      appleActiveApp=next;
+      if(m) console.log("Apple TV active app: "+m[1].trim()+" ("+next+")");
+    }
+    if(/com\.netflix\.Netflix/i.test(appleActiveApp) && !appleMedia){
+      // Netflix on current tvOS can expose playback state via Companion while
+      // withholding title/artist metadata. Keep this explicit rather than
+      // inventing a programme title.
+      appleMedia={mediaType:"Unknown",deviceState:"Playing",title:"Netflix",artist:"",position:null,app:"Netflix"};
+      applePlaybackKey="netflix";
+      if(!applePlaybackStartedAt)applePlaybackStartedAt=Date.now();
+      queuePublish();
+    } else if(!/com\.netflix\.Netflix/i.test(appleActiveApp) && appleMedia?.app==="Netflix"){
+      appleMedia=null;applePlaybackKey="";applePlaybackStartedAt=0;queuePublish();
+    }
+  });
+}
+
 function pollAppleTvPlaying() {
   if (atvPollRunning || (!appleTvId && !appleHost)) return;
   atvPollRunning = true;
@@ -891,8 +935,10 @@ function pollAppleTvPlaying() {
 function startAppleTvPolling() {
   clearInterval(atvPollTimer);
   console.log("Starting Apple TV active playing fallback (10s)...");
+  pollAppleTvApp();
   pollAppleTvPlaying();
   atvPollTimer = setInterval(() => {
+    pollAppleTvApp();
     if (!atvWatcherHealthy) pollAppleTvPlaying();
   }, 10000);
 }
